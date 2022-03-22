@@ -1,0 +1,10 @@
+export const SCISSORS = 'scissors';
+export const PAPER = 'paper';
+export const ROCK = 'rock';
+export const WIN = 'You Win';
+export const LOSE = 'You lose';
+export const TIE = 'Tie';
+export const GAMEOVER = 'Game Over';
+export const ME = 'Me';
+export const MACHINE = 'Machine';
+export const REPEAT = 'Repeat';
