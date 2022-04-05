@@ -1,27 +1,25 @@
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {connect, useDispatch, useSelector} from 'react-redux';
 
 import Colors from '../constants/colors';
 import Constants from '../constants';
 import MealDetail from '../components/MealDetail';
 import React from 'react';
+import {selectMeal} from '../../src/store/actions/meal.action';
 import {useNavigation} from '@react-navigation/native';
 
-export default function MealItem({
-  id,
-  title,
-  imageUrl,
-  duration,
-  complexity,
-  affordability,
-}) {
+function MealItem({id, title, imageUrl, duration, complexity, affordability}) {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   const props = {
     duration: duration,
     complexity: complexity,
     affordability: affordability,
   };
 
-  const selectMealHandler = () => {
+  const selectMealHandler = id => {
+    dispatch(selectMeal(id));
     navigation.navigate(Constants.MEALS_DETAIL_SCREEN, {
       mealId: id,
     });
@@ -30,7 +28,7 @@ export default function MealItem({
   return (
     <View style={styles.mealItem}>
       <Pressable
-        onPress={selectMealHandler}
+        onPress={() => selectMealHandler(id)}
         style={({pressed}) => [{flex: 1, opacity: pressed ? 0.5 : null}]}
         android_ripple={{color: Colors.rippleColor}}>
         <View style={styles.mainContainer}>
@@ -70,3 +68,4 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
+export default connect()(MealItem);

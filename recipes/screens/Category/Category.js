@@ -1,15 +1,22 @@
 import {FlatList, StyleSheet, View} from 'react-native';
+import {connect, useDispatch, useSelector} from 'react-redux';
 
 import {CATEGORIES} from '../../src/data/dummy';
 import CategoryGridTile from '../../src/components/CategoryGridTile';
 import Constants from '../../src/constants';
 import React from 'react';
+import {selectCategory} from '../../src/store/actions/category.action';
 import {useDimensions} from '../../src/hooks/useDimensions';
 
-export default function Category({navigation}) {
+function Category({navigation}) {
+  const dispatch = useDispatch();
+  const categories = useSelector(state => state.categories.categories);
+  const screenInfo = useDimensions();
+
   const renderItem = ({item}) => {
     const onPressHandler = () => {
-      navigation.navigate(Constants.MEALS_HOME_SCREEN, {categoryId: item.id});
+      dispatch(selectCategory(item.id));
+      navigation.navigate(Constants.MEALS_HOME_SCREEN, {name: item.name});
     };
 
     const {title, color} = item;
@@ -18,10 +25,9 @@ export default function Category({navigation}) {
     );
   };
 
-  const screenInfo = useDimensions();
   return (
     <View style={{...styles.mainContainer, margin: screenInfo.width * 0.02}}>
-      <FlatList data={CATEGORIES} renderItem={renderItem} numColumns={2} />
+      <FlatList data={categories} renderItem={renderItem} numColumns={2} />
     </View>
   );
 }
@@ -31,3 +37,5 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
+
+export default connect()(Category);

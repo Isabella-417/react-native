@@ -1,24 +1,24 @@
-import {CATEGORIES, MEALS} from '../../src/data/dummy';
 import {FlatList, View} from 'react-native';
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect} from 'react';
+import {connect, useDispatch, useSelector} from 'react-redux';
 
 import MealItem from '../../src/components/MealItem';
+import {filteredMeals} from '../../src/store/actions/meal.action';
 
-export default function Meal({route, navigation}) {
-  const {categoryId} = route.params;
-
-  const selectedCategory = MEALS.filter(category =>
-    category.categoryIds.includes(categoryId),
+function Meal({navigation}) {
+  const dispatch = useDispatch();
+  const categoryProducts = useSelector(state => state.meals.filteredMeals);
+  const selectedCategory = useSelector(
+    state => state.categories.selectedCategory,
   );
 
-  useLayoutEffect(() => {
-    const categorySelected = CATEGORIES.find(el => el.id === categoryId);
+  useEffect(() => {
+    dispatch(filteredMeals(selectedCategory.id));
 
     navigation.setOptions({
-      title: categorySelected.title,
+      title: selectedCategory.title,
     });
-  }),
-    [categoryId, navigation];
+  }, []);
 
   const renderItem = ({item}) => {
     const {id, title, imageUrl, duration, complexity, affordability} = item;
@@ -36,7 +36,9 @@ export default function Meal({route, navigation}) {
 
   return (
     <View>
-      <FlatList data={selectedCategory} renderItem={renderItem} />
+      <FlatList data={categoryProducts} renderItem={renderItem} />
     </View>
   );
 }
+
+export default connect()(Meal);

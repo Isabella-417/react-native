@@ -1,14 +1,15 @@
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React, {useLayoutEffect} from 'react';
+import {connect, useSelector} from 'react-redux';
 
 import Colors from '../../src/constants/colors';
 import ListItems from '../../src/components/ListItems';
 import {MEALS} from '../../src/data/dummy';
 import MealDetail from '../../src/components/MealDetail';
 
-export default function DetailMeal({route, navigation}) {
-  const {mealId} = route.params;
-  const choosenMeal = MEALS.find(meal => meal.id === mealId);
+function DetailMeal({route, navigation}) {
+  const choosenMeal = useSelector(state => state.meals.selectedMeal);
+
   const {title, imageUrl, steps, ingredients} = choosenMeal;
 
   const props = {
@@ -48,3 +49,5 @@ const styles = StyleSheet.create({
     color: Colors.blackColor,
   },
 });
+
+export default connect()(DetailMeal);
